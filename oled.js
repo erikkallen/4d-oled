@@ -10,14 +10,8 @@ const F_txt_BGcolour = 0xff7e;
 const F_SSTimeout = 0x000c;
 
 const CMD_ACK = 0x06;
-const COLOR_BLACK = 0x0000
-const COLOR_WHITE = 0xFFFF
 
-const DISPLAY_PIXEL_X_BEGIN = 0
-const DISPLAY_PIXEL_X_END = 127
 
-const DISPLAY_PIXEL_Y_BEGIN = 0
-const DISPLAY_PIXEL_Y_END = 127
 
 var log = {
   debug: console.log,
@@ -190,6 +184,9 @@ class OLED extends EventEmitter {
   SSTimeout(seconds, done) {
     this.sendCommand(F_SSTimeout, [seconds],done)
   }
+
+  COLOR_BLACK = 0x0000
+  COLOR_WHITE = 0xFFFF
 
 }
 
