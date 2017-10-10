@@ -1,0 +1,15 @@
+{
+  "name": "oled",
+  "version": "1.0.0",
+  "description": "",
+  "main": "oled.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Erik Kallen",
+  "license": "ISC",
+  "dependencies": {
+    "serialport": "^6.0.0-beta3",
+    "seq-queue": "0.0.5"
+  }
+}
