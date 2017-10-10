@@ -193,31 +193,4 @@ class OLED extends EventEmitter {
 
 }
 
-oled = new OLED()
-
-oled.connect()
-
-
-oled.on('connected', function(){
-  oled.SSTimeout(0);                   // 0 disables the screen-saver
-  oled.gfx_Cls();                      // Clear screen
-  oled.gfx_LinePattern(0, console.log) ;            // Reset line-pattern to solid line
-  oled.gfx_BGcolour(COLOR_BLACK, console.log) ;           // Reset background-color
-  oled.txt_BGcolour(COLOR_BLACK, console.log) ;           // Reset text background-color
-  oled.gfx_Cls();                      // Clear screen
-
-  // oled.gfx_Line(0,0,127,127,COLOR_WHITE, console.log)
-  // oled.gfx_Line(127,0,0,127,COLOR_WHITE, console.log)
-  
-  // oled.gfx_Line(0,0,0,127,COLOR_WHITE, console.log)
-  // oled.gfx_Line(127,0,0,0,COLOR_WHITE, console.log)
-  // oled.gfx_Line(127,127,0,0,COLOR_WHITE, console.log)
-
-  oled.gfx_Line( DISPLAY_PIXEL_X_BEGIN, DISPLAY_PIXEL_Y_BEGIN, DISPLAY_PIXEL_X_BEGIN, DISPLAY_PIXEL_Y_END, COLOR_WHITE );
-  oled.gfx_Line( DISPLAY_PIXEL_X_BEGIN, DISPLAY_PIXEL_Y_BEGIN, DISPLAY_PIXEL_X_END, DISPLAY_PIXEL_Y_BEGIN, COLOR_WHITE );
-  oled.gfx_Line( DISPLAY_PIXEL_X_END, DISPLAY_PIXEL_Y_END, DISPLAY_PIXEL_X_END, DISPLAY_PIXEL_Y_BEGIN, COLOR_WHITE );
-  oled.gfx_Line( DISPLAY_PIXEL_X_END, DISPLAY_PIXEL_Y_END, DISPLAY_PIXEL_X_BEGIN, DISPLAY_PIXEL_Y_END, COLOR_WHITE );
-  oled.gfx_Line( DISPLAY_PIXEL_X_BEGIN, DISPLAY_PIXEL_Y_BEGIN, DISPLAY_PIXEL_X_END, DISPLAY_PIXEL_Y_END, COLOR_WHITE );
-  oled.gfx_Line( DISPLAY_PIXEL_X_BEGIN, DISPLAY_PIXEL_Y_END, DISPLAY_PIXEL_X_END, DISPLAY_PIXEL_Y_BEGIN, COLOR_WHITE );
- // oled.gfx_Line(0,0,127,0,COLOR_WHITE, console.log)
-})
+module.exports = new OLED()
