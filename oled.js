@@ -185,9 +185,20 @@ class OLED extends EventEmitter {
     this.sendCommand(F_SSTimeout, [seconds],done)
   }
 
-  COLOR_BLACK = 0x0000
-  COLOR_WHITE = 0xFFFF
-
 }
+
+Object.defineProperty(OLED, 'COLOR_BLACK', {
+  value: 0x0000,
+  writable : false,
+  enumerable : true,
+  configurable : false
+});
+
+Object.defineProperty(OLED, 'COLOR_WHITE', {
+  value: 0xffff,
+  writable : false,
+  enumerable : true,
+  configurable : false
+});
 
 module.exports = new OLED()
