@@ -1,3 +1,5 @@
+'use strict'
+
 var SerialPort = require('serialport');
 const seqqueue = require('seq-queue');
 const EventEmitter = require("events").EventEmitter;
@@ -14,7 +16,7 @@ const CMD_ACK = 0x06;
 
 
 var log = {
-  debug: console.log,
+  debug: function(){},
   level: function(){},
   error: console.log,
   info: console.log
@@ -41,7 +43,7 @@ class OLED extends EventEmitter {
     var __this = this
     // List ports and connect
     SerialPort.list(function (err, ports) {
-      ports.some(function(ser_port) {
+      var port_found = ports.some(function(ser_port) {
         // log.debug(ser_port);
         // log.debug(ser_port.pnpId);
         // log.debug(ser_port.manufacturer);
@@ -56,8 +58,9 @@ class OLED extends EventEmitter {
           __this.emit("device_found", ser_port)
           return true
         }
-        __this.emit("error", new Error("No device found"))
+        
       });
+      if (!port_found) __this.emit("error", new Error("No device found"))
     });
   };
 
@@ -187,18 +190,10 @@ class OLED extends EventEmitter {
 
 }
 
-Object.defineProperty(OLED, 'COLOR_BLACK', {
-  value: 0x0000,
-  writable : false,
-  enumerable : true,
-  configurable : false
-});
-
-Object.defineProperty(OLED, 'COLOR_WHITE', {
-  value: 0xffff,
-  writable : false,
-  enumerable : true,
-  configurable : false
-});
-
-module.exports = new OLED()
+module.exports = {
+  colors: {
+    COLOR_BLACK: 0x0000,
+    COLOR_WHITE : 0xffff
+  },
+  OLED: OLED
+}
