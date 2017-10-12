@@ -10,6 +10,7 @@ const F_gfx_LinePattern = 0xff65;
 const F_gfx_BGcolour = 0xff6e;
 const F_txt_BGcolour = 0xff7e;
 const F_SSTimeout = 0x000c;
+const F_gfx_Contrast = 0xff66;
 
 const CMD_ACK = 0x06;
 
@@ -174,6 +175,10 @@ class OLED extends EventEmitter {
 
   gfx_LinePattern(pattern, done) {
     this.sendCommand(F_gfx_LinePattern, [pattern],done)
+  }
+
+  gfx_Contrast(contrast, done) {
+    this.sendCommand(F_gfx_Contrast, [contrast],done)
   }
 
   txt_BGcolour(color, done) {
