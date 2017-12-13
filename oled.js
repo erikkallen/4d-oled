@@ -31,39 +31,43 @@ class OLED extends EventEmitter {
     // Commands that have been sent queue
     this.cmd_q = [];
     // Device actions queue
-    this.queue = seqqueue.createQueue(20000);
-    this.on("device_found", function(device){
-      this.connect_to_device(device.comName)
-    })
     log.debug("Com lib started")
     //log.level("debug")
     log.level("info")
+    this.queue = seqqueue.createQueue(20000);
+    return this.connect().then(function(device){
+      this.connect_to_device(device.comName)
+    })
   }
 
   connect() {
     var __this = this
     // List ports and connect
-    SerialPort.list(function (err, ports) {
-      var port_found = ports.some(function(ser_port) {
-        // log.debug(ser_port);
-        // log.debug(ser_port.pnpId);
-        // log.debug(ser_port.manufacturer);
-        // log.debug(ser_port.vendorId)
-        // log.debug(ser_port.productId)
-        if (ser_port.vendorId != undefined && ser_port.vendorId.replace(/^0x/,'').toLowerCase() == "10c4" && ser_port.productId.replace(/^0x/,'').toLowerCase() == "ea60") {
-          log.debug("Found device");
-          log.debug(ser_port.comName);
-          log.debug(ser_port.pnpId);
-          log.debug(ser_port.manufacturer);
-          log.debug(ser_port.vendorId)
-          __this.emit("device_found", ser_port)
-          return true
-        }
-        
-      });
-      if (!port_found) __this.emit("error", new Error("No device found"))
-    });
-  };
+    return new Promise(
+      function(resolve, reject) {
+        SerialPort.list(function (err, ports) {
+          var port_found = ports.some(function(ser_port) {
+            // log.debug(ser_port);
+            // log.debug(ser_port.pnpId);
+            // log.debug(ser_port.manufacturer);
+            // log.debug(ser_port.vendorId)
+            // log.debug(ser_port.productId)
+            if (ser_port.vendorId != undefined && ser_port.vendorId.replace(/^0x/,'').toLowerCase() == "10c4" && ser_port.productId.replace(/^0x/,'').toLowerCase() == "ea60") {
+              log.debug("Found device");
+              log.debug(ser_port.comName);
+              log.debug(ser_port.pnpId);
+              log.debug(ser_port.manufacturer);
+              log.debug(ser_port.vendorId)
+              // __this.emit("device_found", ser_port)
+              resolve(ser_port)
+              // return true
+            }
+          })
+          if (!port_found) reject(new Error("No device found")) // __this.emit("error", new Error("No device found"))
+        })
+      }
+    )
+  }
 
   connect_to_device(name) {
     var __this = this
@@ -130,8 +134,12 @@ class OLED extends EventEmitter {
   )
   }
 
+  connected() {
+    return (this.port !== undefined && this.port !== null && this.port.isOpen)
+  }
+
   disconnect() {
-    if (this.port != undefined) this.port.close()
+    if (this.port) this.port.close()
   }
 
   device_command(cmd, data, callback) {
