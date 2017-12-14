@@ -64,7 +64,10 @@ class OLED extends EventEmitter {
               }
               __this.port.set({dtr:false}, () => {
                 __this.port.set({dtr:true}, () => {
-                  resolve(ser_port)
+                  setTimeout(()=>{
+                    // __this.emit('connected')
+                      resolve()
+                    },3000);
                 })
               })
               // return true
