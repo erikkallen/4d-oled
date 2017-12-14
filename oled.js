@@ -62,7 +62,11 @@ class OLED extends EventEmitter {
                   resolve(ser_port)
                 })
               }
-              resolve(ser_port)
+              __this.port.set({dtr:false}, () => {
+                __this.port.set({dtr:true}, () => {
+                  resolve(ser_port)
+                })
+              })
               // return true
             }
           })
