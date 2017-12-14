@@ -58,7 +58,9 @@ class OLED extends EventEmitter {
               log.debug(ser_port.vendorId)
               // __this.emit("device_found", ser_port)
               if (!__this.connected()) {
-                __this.connect_to_device(ser_port.comName)
+                __this.connect_to_device(ser_port.comName).then(() => {
+                  resolve(ser_port)
+                })
               }
               resolve(ser_port)
               // return true
@@ -72,49 +74,47 @@ class OLED extends EventEmitter {
 
   connect_to_device(name) {
     var __this = this
-    this.port = new SerialPort(name);
-    this.port.flush(function(){
-      //var Delimiter = SerialPort.parsers.Delimiter;
-      //__this.parser = __this.port.pipe(new Delimiter({delimiter: new Buffer([0])}))
+    return new Promise((resolve, reject) => {
+      this.port = new SerialPort(name);
+      this.port.flush(function(){
+        // If data from the device is received it is parsed here
+        // an answer is expected from each sent command so it is simply mached in the same order the commands are sent
+        __this.port.on('data', function(data){
+          __this.emit("raw_data", data)
+          log.debug('Data (raw)', data)
+          log.debug('Data (raw) size:', data.length);
+          
+          var queued_comand = __this.cmd_q.shift()
+          //log.debug("Matching ",queued_comand.cmd);
+          // Handle Measurement data
+          if (data[0] == CMD_ACK) {
+            __this.emit("command_ack", data)
+            queued_comand.cb(null,data)
+          } else {
+            __this.emit("command_nack", data)
+            queued_comand.cb(new Error("Command returned NACK"),data)
+          }
 
-      
-      // If data from the device is received it is parsed here
-      // an answer is expected from each sent command so it is simply mached in the same order the commands are sent
-      __this.port.on('data', function(data){
-        __this.emit("raw_data", data)
-        log.debug('Data (raw)', data)
-        log.debug('Data (raw) size:', data.length);
-        
-        var queued_comand = __this.cmd_q.shift()
-        //log.debug("Matching ",queued_comand.cmd);
-        // Handle Measurement data
-        if (data[0] == CMD_ACK) {
-          __this.emit("command_ack", data)
-          queued_comand.cb(null,data)
-        } else {
-          __this.emit("command_nack", data)
-          queued_comand.cb(new Error("Command returned NACK"),data)
-        }
+        });
 
-      });
-
-      __this.on('error', function(err){
+        __this.on('error', function(err){
+          log.error("Ooh noo")
+          log.error(err)
+          __this.emit("error", err)
+        })
+        // The device needs 3 seconds to boot
+        setTimeout(()=>{
+        // __this.emit('connected')
+          resolve()
+        },3000);
+      })
+      __this.port.on('error', function(err){
         log.error("Ooh noo")
         log.error(err)
         __this.emit("error", err)
+        reject()
       })
-      // The device needs 3 seconds to boot
-      setTimeout(()=>{
-      __this.emit('connected')
-      },3000);
     })
-    __this.port.on('error', function(err){
-      log.error("Ooh noo")
-      log.error(err)
-      __this.emit("error", err)
-    })
-
-
   }
   
 
