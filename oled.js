@@ -35,9 +35,7 @@ class OLED extends EventEmitter {
     //log.level("debug")
     log.level("info")
     this.queue = seqqueue.createQueue(20000);
-    return this.connect().then(function(device){
-      this.connect_to_device(device.comName)
-    })
+    //return this.connect()
   }
 
   connect() {
@@ -59,6 +57,9 @@ class OLED extends EventEmitter {
               log.debug(ser_port.manufacturer);
               log.debug(ser_port.vendorId)
               // __this.emit("device_found", ser_port)
+              if (!__this.connected()) {
+                __this.connect_to_device(device.comName)
+              }
               resolve(ser_port)
               // return true
             }
