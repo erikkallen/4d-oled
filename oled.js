@@ -58,7 +58,7 @@ class OLED extends EventEmitter {
               log.debug(ser_port.vendorId)
               // __this.emit("device_found", ser_port)
               if (!__this.connected()) {
-                __this.connect_to_device(device.comName)
+                __this.connect_to_device(ser_port.comName)
               }
               resolve(ser_port)
               // return true
