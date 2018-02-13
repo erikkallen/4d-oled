@@ -71,7 +71,7 @@ class OLED {
               return console.log("Error: ", err)
             }
             self.port.flush(() => {
-              setTimeout(resolve, 3000)
+              setTimeout(resolve, 5000)
             })
           })
         }
