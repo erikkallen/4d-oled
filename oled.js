@@ -61,7 +61,7 @@ class OLED {
           return reject(new Error("No device found"))
         } else {
           if (!self.port) {
-            self.port = new SerialPort(oled[0].comName, {autoOpen: false})
+            self.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: true})
             console.log("pre Serialport isOpen", self.port.isOpen)
           }
 
@@ -71,7 +71,7 @@ class OLED {
               return console.log("Error: ", err)
             }
             self.port.flush(() => {
-              setTimeout(resolve, 5000)
+              setTimeout(resolve, 4000)
             })
           })
         }
