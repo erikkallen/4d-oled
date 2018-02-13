@@ -15,7 +15,8 @@ const F_gfx_Contrast = 0xff66
 const CMD_ACK = 0x06
 
 var log = {
-  debug: console.log, // function(msg) {console.log("OLED: ", msg)},
+  debug: function() {},
+  // debug: console.log, // function(msg) {console.log("OLED: ", msg)},
   level: function() {},
   error: console.log,
   info: console.log

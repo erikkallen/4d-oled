@@ -30,9 +30,6 @@ oled.connect().then(() => {
   return console.log(err)
 })
 
-
-
-
 // oled.connect((err) => {
 //   if (err) {
 //     return console.log("connection failed")
