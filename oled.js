@@ -39,13 +39,12 @@ class OLED {
   }
 
   connect() {
-    var self = this
     return new Promise((resolve, reject) => {
       console.log("OLED: Connect called")
       // List ports and connect
       SerialPort.list().then((ports) => {
         // console.log(ports)
-        var oled = ports.filter(function(ser_port) {
+        let oled = ports.filter((ser_port) => {
           if (ser_port.vendorId != undefined && ser_port.vendorId.replace(/^0x/, '').toLowerCase() == "10c4" && ser_port.productId.replace(/^0x/, '').toLowerCase() == "ea60") {
             log.debug("Found device")
             log.debug(ser_port.comName)
@@ -60,17 +59,17 @@ class OLED {
         if (oled.length === 0) {
           return reject(new Error("No device found"))
         } else {
-          if (!self.port) {
-            self.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: true})
-            console.log("pre Serialport isOpen", self.port.isOpen)
+          if (!this.port) {
+            this.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: true})
+            console.log("pre Serialport isOpen", this.port.isOpen)
           }
 
-          self.port.open((err) => {
+          this.port.open((err) => {
             if (err) {
               reject(err)
               return console.log("Error: ", err)
             }
-            self.port.flush(() => {
+            this.port.flush(() => {
               setTimeout(resolve, 4000)
             })
           })
@@ -100,19 +99,18 @@ class OLED {
   }
 
   sendSync(src) {
-    let self = this
     return new Promise((resolve, reject) => {
-      self.port.write(src)
-      self.port.once("data", data => resolve(data))
-      self.port.once('error', err => reject(err))
+      this.port.write(src)
+      this.port.once("data", data => resolve(data))
+      this.port.once('error', err => reject(err))
     })
   }
 
   device_command(cmd, data) {
     return new Promise((resolve, reject) => {
       const buf_cmd = Buffer.alloc(2)
-      var data_buf = Buffer.alloc(data.length * 2)
-      var send_buf
+      let data_buf = Buffer.alloc(data.length * 2)
+      let send_buf
       buf_cmd.writeUInt16BE(cmd, 0)
 
       data.map((val, index) => {
