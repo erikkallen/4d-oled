@@ -57,9 +57,8 @@ class OLED {
         })
         console.log(oled)
         if (oled.length === 0) {
-          return reject(new Error("No device found"))
+          reject(new Error("No device found"))
         } else {
-          this.port = null
           this.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: true})
           console.log("pre Serialport isOpen", this.port.isOpen)
           this.port.setMaxListeners(500)
