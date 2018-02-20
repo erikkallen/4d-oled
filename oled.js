@@ -44,7 +44,7 @@ class OLED {
       // List ports and connect
       SerialPort.list().then((ports) => {
         // console.log(ports)
-        let oled = ports.filter((ser_port) => {
+        return ports.filter((ser_port) => {
           if (ser_port.vendorId != undefined && ser_port.vendorId.replace(/^0x/, '').toLowerCase() == "10c4" && ser_port.productId.replace(/^0x/, '').toLowerCase() == "ea60") {
             log.debug("Found device")
             log.debug(ser_port.comName)
@@ -55,11 +55,13 @@ class OLED {
             return ser_port
           }
         })
+      }).then((oled) => {
         console.log(oled)
         if (oled.length === 0) {
           reject(new Error("No device found"))
         } else {
-          this.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: true})
+          this.port = null
+          this.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: false})
           console.log("pre Serialport isOpen", this.port.isOpen)
           this.port.setMaxListeners(500)
 
