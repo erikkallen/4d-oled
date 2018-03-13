@@ -64,15 +64,24 @@ class OLED {
           this.port = new SerialPort(oled[0].comName, {autoOpen: false, rtscts: false})
           console.log("pre Serialport isOpen", this.port.isOpen)
           this.port.setMaxListeners(500)
-
           this.port.open((err) => {
             if (err) {
               reject(err)
               return console.log("Error: ", err)
             }
-            this.port.flush(() => {
-              setTimeout(resolve, 4000)
+            this.port.set({
+              dtr: false,
+              rts: false
             })
+            setTimeout(() => {
+              this.port.set({
+                dtr: true,
+                rts: true
+              })
+              this.port.flush(() => {
+                setTimeout(resolve, 4000)
+              })
+            }, 3000)
           })
         }
       })
