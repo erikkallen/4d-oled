@@ -38,14 +38,14 @@ class OLED {
     // return this.connect()
   }
 
-  connect() {
+  connect(vid = 0x10c4, pid = 0xea60) {
     return new Promise((resolve, reject) => {
       console.log("OLED: Connect called")
       // List ports and connect
       SerialPort.list().then((ports) => {
         // console.log(ports)
         return ports.filter((ser_port) => {
-          if (ser_port.vendorId != undefined && ser_port.vendorId.replace(/^0x/, '').toLowerCase() == "10c4" && ser_port.productId.replace(/^0x/, '').toLowerCase() == "ea60") {
+          if (ser_port.vendorId !== undefined && parseInt(ser_port.vendorId, 16) == vid && parseInt(ser_port.productId, 16) == pid) {
             log.debug("Found device")
             log.debug(ser_port.comName)
             log.debug(ser_port.pnpId)
