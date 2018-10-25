@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "seq-queue": "0.0.5",
-    "serialport": "6.0.5"
+    "serialport": "6.2.2"
   }
 }
